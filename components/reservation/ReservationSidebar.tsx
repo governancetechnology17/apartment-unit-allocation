@@ -166,8 +166,8 @@ export function ReservationSidebar({
   });
 
   const updateProfileMutation = useMutation({
-    mutationFn: async (field: "next-of-kin" | "documents" | "success") => {
-      if (field === "next-of-kin")
+    mutationFn: async (field: "next-of-kin" | "success") => {
+      if (field === "next-of-kin") {
         if (newUser) {
           const storeName = store_name();
           const res = await registerUser({
@@ -193,7 +193,30 @@ export function ReservationSidebar({
           });
         }
 
-      if (field === "documents")
+
+        const strip = stripDataUrlBase64Prefix;
+        if (documents.governmentId instanceof File)
+          await updateProfile({
+            document: [
+              {
+                document_type: "id_document",
+                document_name: (documents.governmentId)?.name,
+                id_number: null,
+                image: await encodeFileToBase64(documents.governmentId).then(strip),
+              },
+            ],
+            // utility_bill: [
+            //   {
+            //     utility_bill_type: null,
+            //     document_name: documents?.utilityBill?.name,
+            //     utility_bill: await encodeFileToBase64(documents.utilityBill as File).then(strip),
+            //   },
+            // ],
+            documents: true,
+          });
+      }
+
+      if (field === "success")
         await updateProfile({
           first_name: nextOfKin?.firstName,
           last_name: nextOfKin?.lastName,
@@ -203,28 +226,6 @@ export function ReservationSidebar({
           residential_address: nextOfKin?.residentialAddress,
           next_of_kin: true,
         });
-
-      if (field === "success") {
-        const strip = stripDataUrlBase64Prefix;
-        await updateProfile({
-          document: [
-            {
-              document_type: "id_document",
-              document_name: documents.governmentId?.name,
-              id_number: null,
-              image: await encodeFileToBase64(documents.governmentId as File).then(strip),
-            },
-          ],
-          utility_bill: [
-            {
-              utility_bill_type: null,
-              document_name: documents?.utilityBill?.name,
-              utility_bill: await encodeFileToBase64(documents.utilityBill as File).then(strip),
-            },
-          ],
-          documents: true,
-        });
-      }
 
       return field;
     },
@@ -278,7 +279,11 @@ export function ReservationSidebar({
   const docsSettingsMutation = useMutation({
     mutationFn: () => getProfileData({ documents: true }),
     onSuccess: (res) => {
-      const { } = res?.data?.data;
+      const { documents, utilityBill } = res?.data?.data;
+      setDocuments({
+        governmentId: (documents?.[0]) as string,
+        utilityBill: (utilityBill?.[0]) as string,
+      });
       setStep("about-you");
     },
   });
@@ -417,6 +422,8 @@ export function ReservationSidebar({
         onBack={() => setStep("verification")}
         loading={updateProfileMutation.isPending}
         onContinue={() => updateProfileMutation.mutate("next-of-kin")}
+        files={documents}
+        onDocumentChange={setDocuments}
       />,
     );
   }
@@ -427,18 +434,7 @@ export function ReservationSidebar({
         onChange={setNextOfKin}
         onBack={() => setStep("about-you")}
         loading={updateProfileMutation.isPending}
-        onContinue={() => updateProfileMutation.mutate("documents")}
-      />,
-    );
-  }
-  if (step === "documents") {
-    return renderFlow(
-      <DocumentsStep
-        files={documents}
-        onChange={setDocuments}
-        onBack={() => setStep("next-of-kin")}
-        loading={updateProfileMutation.isPending}
-        onProceed={() => updateProfileMutation.mutate("success")}
+        onContinue={() => updateProfileMutation.mutate("success")}
       />,
     );
   }

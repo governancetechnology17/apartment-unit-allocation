@@ -1,3 +1,4 @@
+import { AddressAutocompleteInput } from "@/components/ui/AddressAutoComplete";
 import { ReservationActionContent } from "../ReservationActionContent";
 
 export interface NextOfKinValues {
@@ -163,7 +164,7 @@ export function NextOfKinStep({ loading, values, onChange, onBack, onContinue }:
             <label htmlFor="next-of-kin-address">
               Residential address <span aria-hidden="true">*</span>
             </label>
-            <input
+            {/* <input
               id="next-of-kin-address"
               name="nextOfKinAddress"
               type="text"
@@ -172,6 +173,15 @@ export function NextOfKinStep({ loading, values, onChange, onBack, onContinue }:
               value={values.residentialAddress}
               onChange={(event) => update("residentialAddress", event.target.value)}
               required
+            /> */}
+            <AddressAutocompleteInput
+              id="next-of-kin-address"
+              name="nextOfKinAddress"
+              type="text"
+              autoComplete="street-address"
+              placeholder="Street, city, country"
+              value={values.residentialAddress}
+              onChange={(value) => update("residentialAddress", value)}
             />
           </div>
         </div>

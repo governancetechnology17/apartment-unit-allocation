@@ -1,4 +1,5 @@
 import { ReservationActionContent } from "../ReservationActionContent";
+import { DocumentFiles, DocumentsStep } from "./DocumentsStep";
 
 export interface AboutYouValues {
   firstName: string;
@@ -15,6 +16,8 @@ interface AboutYouStepProps {
   onBack(): void;
   onContinue(): void;
   loading: boolean;
+  files: DocumentFiles;
+  onDocumentChange(files: DocumentFiles): void;
 }
 
 const maritalStatuses = ["Married", "Single", "Divorced", "Widowed", "Rather not say"];
@@ -45,7 +48,7 @@ function validDateOfBirth(value: string) {
   return date >= earliest && date.getTime() <= Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
 }
 
-export function AboutYouStep({ loading, values, onChange, onBack, onContinue }: AboutYouStepProps) {
+export function AboutYouStep({ loading, values, onChange, onBack, onContinue, files, onDocumentChange }: AboutYouStepProps) {
   const update = <Key extends keyof AboutYouValues>(key: Key, value: AboutYouValues[Key]) => onChange({ ...values, [key]: value });
   const complete =
     values.firstName.trim().length >= 2 &&
@@ -164,6 +167,10 @@ export function AboutYouStep({ loading, values, onChange, onBack, onContinue }: 
               ))}
             </select>
           </div>
+          <DocumentsStep
+            files={files}
+            onDocumentChange={onDocumentChange}
+          />
         </div>
       </div>
 

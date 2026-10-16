@@ -4,16 +4,13 @@ import { type DragEvent, type ReactNode, useState } from "react";
 import { ReservationActionContent } from "../ReservationActionContent";
 
 export interface DocumentFiles {
-  governmentId: File | null;
-  utilityBill: File | null;
+  governmentId: File | string | null;
+  utilityBill: File | string | null;
 }
 
 interface DocumentsStepProps {
   files: DocumentFiles;
-  onChange(files: DocumentFiles): void;
-  onBack(): void;
-  onProceed(): void;
-  loading: boolean;
+  onDocumentChange(files: DocumentFiles): void;
 }
 
 interface UploadFieldProps {
@@ -21,7 +18,7 @@ interface UploadFieldProps {
   label: string;
   required?: boolean;
   hint: string;
-  file: File | null;
+  file: File | string | null;
   error: string | null;
   onFile(file: File | null): void;
   onError(error: string | null): void;
@@ -53,6 +50,8 @@ function UploadField({ id, label, required, hint, file, error, onFile, onError }
     chooseFile(event.dataTransfer.files[0]);
   };
 
+  const fileName = file instanceof File ? file.name : file ? file : 'File'
+
   let content: ReactNode;
   if (file) {
     content = (
@@ -61,7 +60,7 @@ function UploadField({ id, label, required, hint, file, error, onFile, onError }
           ✓
         </span>
         <span className="document-upload-copy">
-          <strong title={file.name}>{file.name}</strong>
+          <strong title={fileName}>{fileName}</strong>
           <small>
             Uploaded ·{" "}
             <button
@@ -124,56 +123,32 @@ function UploadField({ id, label, required, hint, file, error, onFile, onError }
   );
 }
 
-export function DocumentsStep({ loading, files, onChange, onBack, onProceed }: DocumentsStepProps) {
+export function DocumentsStep({ files, onDocumentChange }: DocumentsStepProps) {
   const [errors, setErrors] = useState<{ governmentId: string | null; utilityBill: string | null }>({ governmentId: null, utilityBill: null });
-  const complete = Boolean(files.governmentId && files.utilityBill && !errors.governmentId && !errors.utilityBill);
 
   return (
-    <div className="reservation-step">
-      <header className="reservation-step-header">
-        <p>
-          Step 7 of 7 <span aria-hidden="true">·</span> Documents
-        </p>
-      </header>
 
-      <div className="reservation-step-scroll documents-step-scroll">
-        <section className="documents-step-intro">
-          <h2>Upload your documents</h2>
-          <p>Upload images or PDF files up to 10 MB each. We will use these documents for identity verification only.</p>
-        </section>
-
-        <div className="document-fields">
-          <UploadField
-            id="government-id"
-            label="Government ID"
-            required
-            hint="Passport, national ID or driver licence"
-            file={files.governmentId}
-            error={errors.governmentId}
-            onFile={(governmentId) => onChange({ ...files, governmentId })}
-            onError={(governmentId) => setErrors((current) => ({ ...current, governmentId }))}
-          />
-          <UploadField
-            id="utility-bill"
-            label="Proof of residence"
-            required
-            hint="Dated within the last three months"
-            file={files.utilityBill}
-            error={errors.utilityBill}
-            onFile={(utilityBill) => onChange({ ...files, utilityBill })}
-            onError={(utilityBill) => setErrors((current) => ({ ...current, utilityBill }))}
-          />
-        </div>
-      </div>
-
-      <footer className="reservation-step-actions">
-        <button type="button" className="secondary-action" onClick={onBack}>
-          Back
-        </button>
-        <button type="button" className="continue-action" disabled={!complete || loading} aria-busy={loading} onClick={onProceed}>
-          <ReservationActionContent loading={loading} label="Proceed" loadingLabel="Uploading..." />
-        </button>
-      </footer>
+    <div className="document-fields">
+      <UploadField
+        id="government-id"
+        label="Government ID"
+        required
+        hint="Passport, national ID or driver licence"
+        file={files.governmentId}
+        error={errors.governmentId}
+        onFile={(governmentId) => onDocumentChange({ ...files, governmentId })}
+        onError={(governmentId) => setErrors((current) => ({ ...current, governmentId }))}
+      />
+      {/* <UploadField
+        id="utility-bill"
+        label="Proof of residence"
+        required
+        hint="Dated within the last three months"
+        file={files.utilityBill}
+        error={errors.utilityBill}
+        onFile={(utilityBill) => onDocumentChange({ ...files, utilityBill })}
+        onError={(utilityBill) => setErrors((current) => ({ ...current, utilityBill }))}
+      /> */}
     </div>
   );
 }
