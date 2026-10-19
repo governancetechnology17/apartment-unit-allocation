@@ -1,6 +1,6 @@
 "use client";
 
-import { type DragEvent, type ReactNode, useState } from "react";
+import { Dispatch, type DragEvent, type ReactNode, SetStateAction, useState } from "react";
 import { ReservationActionContent } from "../ReservationActionContent";
 
 export interface DocumentFiles {
@@ -11,6 +11,14 @@ export interface DocumentFiles {
 interface DocumentsStepProps {
   files: DocumentFiles;
   onDocumentChange(files: DocumentFiles): void;
+  errors: {
+    governmentId: string | null;
+    utilityBill: string | null;
+  };
+  setErrors: Dispatch<SetStateAction<{
+    governmentId: string | null;
+    utilityBill: string | null;
+  }>>
 }
 
 interface UploadFieldProps {
@@ -123,7 +131,7 @@ function UploadField({ id, label, required, hint, file, error, onFile, onError }
   );
 }
 
-export function DocumentsStep({ files, onDocumentChange }: DocumentsStepProps) {
+export function DocumentsStep({ files, onDocumentChange, }: DocumentsStepProps) {
   const [errors, setErrors] = useState<{ governmentId: string | null; utilityBill: string | null }>({ governmentId: null, utilityBill: null });
 
   return (

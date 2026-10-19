@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ReservationActionContent } from "../ReservationActionContent";
 import { DocumentFiles, DocumentsStep } from "./DocumentsStep";
 
@@ -49,12 +50,15 @@ function validDateOfBirth(value: string) {
 }
 
 export function AboutYouStep({ loading, values, onChange, onBack, onContinue, files, onDocumentChange }: AboutYouStepProps) {
+  const [errors, setErrors] = useState<{ governmentId: string | null; utilityBill: string | null }>({ governmentId: null, utilityBill: null });
+
   const update = <Key extends keyof AboutYouValues>(key: Key, value: AboutYouValues[Key]) => onChange({ ...values, [key]: value });
   const complete =
     values.firstName.trim().length >= 2 &&
     values.lastName.trim().length >= 2 &&
     validDateOfBirth(values.dateOfBirth) &&
-    Boolean(values.maritalStatus && values.gender && values.education);
+    Boolean(values.maritalStatus && values.gender && values.education) &&
+    Boolean(files.governmentId && !errors.governmentId);
 
   return (
     <div className="reservation-step">
@@ -170,6 +174,7 @@ export function AboutYouStep({ loading, values, onChange, onBack, onContinue, fi
           <DocumentsStep
             files={files}
             onDocumentChange={onDocumentChange}
+            errors={errors} setErrors={setErrors}
           />
         </div>
       </div>
