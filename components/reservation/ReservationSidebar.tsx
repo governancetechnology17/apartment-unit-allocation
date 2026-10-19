@@ -279,10 +279,10 @@ export function ReservationSidebar({
   const docsSettingsMutation = useMutation({
     mutationFn: () => getProfileData({ documents: true }),
     onSuccess: (res) => {
-      const documentData = res?.data?.data?.[0];
+      const documentData = res?.data?.data?.[res?.data?.data?.length - 1];
       setDocuments({
-        governmentId: (documentData?.kyc_document) as string,
-        utilityBill: (documentData?.kyc_document) as string,
+        governmentId: (documentData?.document_name) as string,
+        utilityBill: (documentData?.document_name) as string,
       });
       setStep("about-you");
     },
