@@ -4,7 +4,7 @@ import { apartments as apartmentMetadata } from "./data";
 import type { Apartment, ProjectAllocation } from "./types";
 import { BaseURL, LOCAL_ESUB_DOMAIN } from "./constants/auth-keys";
 
-const ALLOCATIONS_URL = `${BaseURL}/developers/project-allocations-with-owner/3345/`;
+const ALLOCATIONS_URL = `${BaseURL}/developers/project-allocations-with-owner/3430/`;
 const storeCheckUrl = `${BaseURL}/billing/esub/domain/${encodeURIComponent(LOCAL_ESUB_DOMAIN)}/`;
 
 interface AllocationsResponse {

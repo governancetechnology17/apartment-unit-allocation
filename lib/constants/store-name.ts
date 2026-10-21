@@ -3,7 +3,7 @@ import { getStoredStoreData } from "./store-data";
 export const appWindow = typeof window !== "undefined" ? window : null;
 
 const STORE_NAME_KEY = "esub_storeName";
-export const DEFAULT_STORE_NAME = "plinthsandpitches-dev";
+export const DEFAULT_STORE_NAME = "myxelliainc-dev";
 
 export function persistStoreName(storeName: string): void {
   const trimmed = storeName.trim();
