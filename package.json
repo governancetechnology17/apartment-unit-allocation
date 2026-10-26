@@ -4,9 +4,9 @@
   "private": true,
   "packageManager": "yarn@1.22.22",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "node api.js && next dev",
+    "build": "node api.js && next build",
+    "start": "node api.js && next start",
     "check": "yarn format:check && yarn typecheck && yarn build",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
