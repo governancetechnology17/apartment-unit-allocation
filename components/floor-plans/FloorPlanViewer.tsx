@@ -62,8 +62,8 @@ export function FloorPlanViewer({ apartments, registry, initialFloor = 1, initia
           highlightedUnit={hoveredUnit || (activeUnitNumber ? String(Number(activeUnitNumber)) : null)}
           onUnitHover={setHoveredUnit}
           onUnitSelect={(unitNumber) => {
-            const unit = floorUnitsByNumber.get(String(Number(unitNumber)));
-            if (unit && canOpenUnit(unit)) router.push(`/units/${unit.number_num}`);
+            // const unit = floorUnitsByNumber.get(String(Number(unitNumber)));
+            // if (unit && canOpenUnit(unit)) router.push(`/units/${unit.number_num}`);
           }}
         />
         <div className="plan-label-layer">

@@ -45,7 +45,8 @@ export function UnitLabel({ unit, label, viewWidth, viewHeight, active, scale = 
     <Link
       className={className}
       style={style}
-      href={`/units/${unit.number_num}`}
+      href={`#`}
+      // href={`/units/${unit.number_num}`}
       onPointerEnter={() => onHover?.(String(Number(unit.number_num)))}
       onPointerLeave={() => onHover?.(null)}
       onFocus={() => onHover?.(String(Number(unit.number_num)))}
