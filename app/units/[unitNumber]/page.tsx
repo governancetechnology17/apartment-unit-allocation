@@ -29,6 +29,8 @@ const salesData = [
   },
 ];
 
+const hideIds = ['134', '112', '102']
+
 export default async function UnitPage({ params }: { params: Promise<{ unitNumber: string }> }) {
   const { unitNumber } = await params;
   const apartments = await getApartments();
@@ -54,91 +56,97 @@ export default async function UnitPage({ params }: { params: Promise<{ unitNumbe
 
   return (
     <div className="unit-page">
-      <aside className="unit-details">
-        <header className="unit-brandbar">
-          {/* <img src="/assets/logo.svg" alt="Myxellia" /> */}
-          <Link href="/" aria-label="Back to all units">
-            <span aria-hidden="true">←</span>
-          </Link>
-        </header>
+      {!hideIds.includes(unitNumber) && (
+        <aside className="unit-details">
+          <header className="unit-brandbar">
+            {/* <img src="/assets/logo.svg" alt="Myxellia" /> */}
+            <Link href="/" aria-label="Back to all units">
+              <span aria-hidden="true">←</span>
+            </Link>
+          </header>
 
-        <section className="unit-summary">
-          <div className="unit-heading">
-            <small>{unit.house.name} · Tallinn</small>
-            <h1>{unit.number}</h1>
-            <p>{unitKind}</p>
-          </div>
+          <section className="unit-summary">
+            <div className="unit-heading">
+              <small>{unit.house.name} · Tallinn</small>
+              <h1>{unit.number}</h1>
+              <p>{unitKind}</p>
+            </div>
 
-          <dl className="unit-facts">
-            <div>
-              <dt>Tower</dt>
-              <dd>{unit.house.identificator}</dd>
-            </div>
-            <div>
-              <dt>Floor</dt>
-              <dd>{unit.floor}</dd>
-            </div>
-            <div>
-              <dt>Rooms</dt>
-              <dd>{unit.rooms_count || "-"}</dd>
-            </div>
-            <div>
-              <dt>Size</dt>
-              <dd>{formatArea(unit)}</dd>
-            </div>
-            <div>
-              <dt>{unit.extra_size_type || "Outdoor area"}</dt>
-              <dd>{unit.balcony_size_raw ? `${unit.balcony_size_raw} m²` : "-"}</dd>
-            </div>
-            <div>
-              <dt>Status</dt>
-              <dd className={`unit-status status-${status}`}>{statusLabel}</dd>
-            </div>
-          </dl>
+            <dl className="unit-facts">
+              <div>
+                <dt>Tower</dt>
+                <dd>{unit.house.identificator}</dd>
+              </div>
+              <div>
+                <dt>Floor</dt>
+                <dd>{unit.floor}</dd>
+              </div>
+              <div>
+                <dt>Rooms</dt>
+                <dd>{unit.rooms_count || "-"}</dd>
+              </div>
+              <div>
+                <dt>Size</dt>
+                <dd>{formatArea(unit)}</dd>
+              </div>
+              <div>
+                <dt>{unit.extra_size_type || "Outdoor area"}</dt>
+                <dd>{unit.balcony_size_raw ? `${unit.balcony_size_raw} m²` : "-"}</dd>
+              </div>
+              <div>
+                <dt>Status</dt>
+                <dd className={`unit-status status-${status}`}>{statusLabel}</dd>
+              </div>
+            </dl>
 
-          <div className="unit-price">
-            <span>Price</span>
-            <strong>{formatPrice(unit)}</strong>
-          </div>
-
-          <dl className="unit-extras">
-            <div>
-              <dt>View</dt>
-              <dd>{unit.view || "-"}</dd>
+            <div className="unit-price">
+              <span>Price</span>
+              <strong>{formatPrice(unit)}</strong>
             </div>
-            <div>
-              <dt>Interior finish</dt>
-              <dd>Myxellia</dd>
-            </div>
-            <div>
-              <dt>Ceiling height</dt>
-              <dd>2.9 m</dd>
-            </div>
-          </dl>
 
-          <nav className="unit-resource-links" aria-label="Unit resources">
-            <a href="#unit-stage">
-              <span aria-hidden="true">▦</span> Explore floor plan
-            </a>
-            <a href="#unit-stage">
-              <span aria-hidden="true">◇</span> View 3D and interior
-            </a>
-          </nav>
-        </section>
-      </aside>
+            <dl className="unit-extras">
+              <div>
+                <dt>View</dt>
+                <dd>{unit.view || "-"}</dd>
+              </div>
+              <div>
+                <dt>Interior finish</dt>
+                <dd>Myxellia</dd>
+              </div>
+              <div>
+                <dt>Ceiling height</dt>
+                <dd>2.9 m</dd>
+              </div>
+            </dl>
 
-      <UnitWorkspace unit={unit} asset={asset} apartments={planApartments} plans={unitPlans} />
+            <nav className="unit-resource-links" aria-label="Unit resources">
+              <a href="#unit-stage">
+                <span aria-hidden="true">▦</span> Explore floor plan
+              </a>
+              <a href="#unit-stage">
+                <span aria-hidden="true">◇</span> View 3D and interior
+              </a>
+            </nav>
+          </section>
+        </aside>
+      )}
 
-      <ReservationSidebar
-        esubDetails={esubDetails}
-        unitId={unit?.unit}
-        allocationId={unit?.id}
-        unitNumber={unit.number}
-        propertyName={unit.house.name}
-        available={!unit.allocated}
-        salesSubject={salesSubject}
-        contacts={salesData}
-      />
+      <main className="unit-workspace" id="unit-stage" style={{ width: hideIds.includes(unitNumber) ? '100vw' : 'unset' }}>
+        <UnitWorkspace unit={unit} asset={asset} apartments={planApartments} plans={unitPlans} />
+      </main>
+
+      {!hideIds.includes(unitNumber) && (
+        <ReservationSidebar
+          esubDetails={esubDetails}
+          unitId={unit?.unit}
+          allocationId={unit?.id}
+          unitNumber={unit.number}
+          propertyName={unit.house.name}
+          available={!unit.allocated}
+          salesSubject={salesSubject}
+          contacts={salesData}
+        />
+      )}
     </div>
   );
 }

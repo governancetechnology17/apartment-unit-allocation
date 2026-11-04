@@ -25,7 +25,7 @@ const UnitModelViewer = dynamic(() => import("@/components/unit-model/UnitModelV
 export function UnitWorkspace({ unit, asset, apartments, plans }: { unit: Apartment; asset: UnitAsset; apartments: Apartment[]; plans: PlanRegistry }) {
   const [view, setView] = useState<"model" | "interior" | "plan" | "floorPlan">("model");
   return (
-    <main className="unit-workspace" id="unit-stage">
+    <>
       <nav className="view-tabs" aria-label="Unit view">
         <button className={view === "model" ? "selected" : ""} onClick={() => setView("model")}>
           3D
@@ -33,9 +33,9 @@ export function UnitWorkspace({ unit, asset, apartments, plans }: { unit: Apartm
         <button className={view === "interior" ? "selected" : ""} onClick={() => setView("interior")}>
           Interior
         </button>
-        <button className={view === "plan" ? "selected" : ""} onClick={() => setView("plan")}>
+        {/* <button className={view === "plan" ? "selected" : ""} onClick={() => setView("plan")}>
           Plan
-        </button>
+        </button> */}
         <button className={view === "floorPlan" ? "selected" : ""} onClick={() => setView("floorPlan")}>
           Floor Plan
         </button>
@@ -65,6 +65,6 @@ export function UnitWorkspace({ unit, asset, apartments, plans }: { unit: Apartm
           <p>Floor {unit.floor} of 12</p>
         </aside>
       )}
-    </main>
+    </>
   );
 }
